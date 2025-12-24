@@ -102,9 +102,9 @@ export default function Home() {
             <div className="space-y-2">
               <div className="flex items-center justify-between">
                 <label className="text-sm font-medium text-gray-700">Password</label>
-                <a href="#" className="text-sm font-medium text-gray-900 hover:underline">
+                <Link href="/forgot-password" className="text-sm font-medium text-gray-900 hover:underline">
                   Forgot password?
-                </a>
+                </Link>
               </div>
               <div className="relative">
                 <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
