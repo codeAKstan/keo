@@ -7,7 +7,8 @@ import {
   Building2, 
   BarChart3, 
   Settings, 
-  LogOut 
+  LogOut,
+  Calculator
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -17,6 +18,7 @@ export default function Sidebar() {
     { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
     { name: "Transactions", href: "/transactions", icon: Receipt },
     { name: "Payroll", href: "/payroll", icon: Users },
+    { name: "Tax Calculator", href: "/tax-calculator", icon: Calculator },
     { name: "Tax Filings", href: "/tax-filings", icon: Building2 },
     { name: "Reports", href: "/reports", icon: BarChart3 },
   ];
