@@ -14,6 +14,8 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 export default function Sidebar() {
+  const pathname = usePathname();
+
   const navItems = [
     { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
     { name: "Transactions", href: "/transactions", icon: Receipt },
@@ -39,7 +41,7 @@ export default function Sidebar() {
       <nav className="flex-1 space-y-1 px-4 py-4">
         {navItems.map((item) => {
           const Icon = item.icon;
-          const isActive = item.name === "Dashboard"; // Hardcoded active state for now or use pathname
+          const isActive = pathname === item.href;
 
           return (
             <Link
