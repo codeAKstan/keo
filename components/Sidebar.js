@@ -19,7 +19,6 @@ export default function Sidebar() {
     { name: "Transactions", href: "/transactions", icon: Receipt },
     { name: "Payroll", href: "/payroll", icon: Users },
     { name: "Tax Calculator", href: "/tax-calculator", icon: Calculator },
-    { name: "Tax Filings", href: "/tax-filings", icon: Building2 },
     { name: "Reports", href: "/reports", icon: BarChart3 },
   ];
 
