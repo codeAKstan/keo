@@ -2,7 +2,10 @@ import { NextResponse } from 'next/server';
 import dbConnect from '@/lib/mongodb';
 import User from '@/models/User';
 import bcrypt from 'bcryptjs';
+import jwt from 'jsonwebtoken';
 import { sendWelcomeEmail } from '@/lib/email';
+
+const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key-change-in-production';
 
 export async function POST(request) {
   try {
@@ -39,8 +42,19 @@ export async function POST(request) {
     // Send welcome email
     await sendWelcomeEmail(email, name);
 
+    const token = jwt.sign(
+      { 
+        userId: user._id, 
+        email: user.email, 
+        name: user.name,
+        onboardingCompleted: false
+      },
+      JWT_SECRET,
+      { expiresIn: '1d' }
+    );
+
     return NextResponse.json(
-      { message: 'User created successfully', userId: user._id },
+      { message: 'User created successfully', userId: user._id, token },
       { status: 201 }
     );
   } catch (error) {

@@ -14,6 +14,7 @@ export default function Home() {
   });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -35,8 +36,12 @@ export default function Home() {
         throw new Error(data.error || "Invalid credentials");
       }
 
-      // Redirect to dashboard
-      router.push("/dashboard");
+      // Check onboarding status
+      if (data.onboardingCompleted) {
+        router.push("/dashboard");
+      } else {
+        router.push("/onboarding");
+      }
     } catch (err) {
       setError(err.message);
     } finally {

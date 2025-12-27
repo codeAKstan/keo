@@ -38,13 +38,21 @@ export async function POST(request) {
     }
 
     const token = jwt.sign(
-      { userId: user._id, email: user.email, name: user.name },
+      { 
+        userId: user._id, 
+        email: user.email, 
+        name: user.name,
+        onboardingCompleted: user.onboardingCompleted || false
+      },
       JWT_SECRET,
       { expiresIn: '1d' }
     );
 
     const response = NextResponse.json(
-      { message: 'Login successful' },
+      { 
+        message: 'Login successful',
+        onboardingCompleted: user.onboardingCompleted || false
+      },
       { status: 200 }
     );
 

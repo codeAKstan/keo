@@ -20,6 +20,10 @@ const UserSchema = new mongoose.Schema({
     type: String,
     maxlength: [100, 'Business Name cannot be more than 100 characters'],
   },
+  onboardingCompleted: {
+    type: Boolean,
+    default: false,
+  },
   createdAt: {
     type: Date,
     default: Date.now,
