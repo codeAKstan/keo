@@ -1,9 +1,49 @@
-import { Mail, Lock, Eye, CheckCircle, Shield, BarChart3, ArrowRight } from "lucide-react";
-import Image from "next/image";
+"use client";
 
+import { Mail, Lock, Eye, EyeOff, CheckCircle, Shield, BarChart3, ArrowRight } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 export default function Home() {
+  const router = useRouter();
+  const [formData, setFormData] = useState({
+    email: "",
+    password: "",
+  });
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError("");
+    setLoading(true);
+
+    try {
+      const res = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data.error || "Invalid credentials");
+      }
+
+      // Redirect to dashboard
+      router.push("/dashboard");
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="flex min-h-screen w-full flex-col lg:flex-row">
       {/* Left Section - Dark Blue */}
@@ -84,7 +124,13 @@ export default function Home() {
             <p className="text-gray-500">Enter your credentials to access your KEO workspace.</p>
           </div>
 
-          <form className="space-y-6">
+          <form className="space-y-6" onSubmit={handleSubmit}>
+            {error && (
+              <div className="rounded-lg bg-red-50 p-3 text-sm text-red-600">
+                {error}
+              </div>
+            )}
+            
             <div className="space-y-2">
               <label className="text-sm font-medium text-gray-700">Email Address</label>
               <div className="relative">
@@ -93,6 +139,9 @@ export default function Home() {
                 </div>
                 <input
                   type="email"
+                  required
+                  value={formData.email}
+                  onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                   placeholder="name@company.com"
                   className="block w-full rounded-lg border border-gray-200 bg-gray-50 py-3 pl-10 pr-3 text-gray-900 placeholder:text-gray-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 focus:outline-none"
                 />
@@ -111,25 +160,34 @@ export default function Home() {
                   <Lock className="h-5 w-5 text-gray-400" />
                 </div>
                 <input
-                  type="password"
+                  type={showPassword ? "text" : "password"}
+                  required
+                  value={formData.password}
+                  onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                   placeholder="Enter your password"
                   className="block w-full rounded-lg border border-gray-200 bg-gray-50 py-3 pl-10 pr-10 text-gray-900 placeholder:text-gray-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 focus:outline-none"
                 />
                 <button
                   type="button"
-                  className="absolute inset-y-0 right-0 flex items-center pr-3"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute inset-y-0 right-0 flex items-center pr-3 z-10 cursor-pointer"
                 >
-                  <Eye className="h-5 w-5 text-gray-400" />
+                  {showPassword ? (
+                    <EyeOff className="h-5 w-5 text-gray-400" />
+                  ) : (
+                    <Eye className="h-5 w-5 text-gray-400" />
+                  )}
                 </button>
               </div>
             </div>
 
             <button
               type="submit"
-              className="flex w-full items-center justify-center gap-2 rounded-lg bg-[#0F1629] px-6 py-3 text-white transition-colors hover:bg-[#1a2440] focus:ring-4 focus:ring-[#0F1629]/20 focus:outline-none"
+              disabled={loading}
+              className="flex w-full items-center justify-center gap-2 rounded-lg bg-[#0F1629] px-6 py-3 text-white transition-colors hover:bg-[#1a2440] focus:ring-4 focus:ring-[#0F1629]/20 focus:outline-none disabled:opacity-50"
             >
-              Log In
-              <ArrowRight className="h-4 w-4" />
+              {loading ? "Logging In..." : "Log In"}
+              {!loading && <ArrowRight className="h-4 w-4" />}
             </button>
           </form>
 
@@ -171,9 +229,9 @@ export default function Home() {
 
           <p className="mt-8 text-center text-sm text-gray-500">
             New to KEO?{" "}
-            <a href="/signup" className="font-bold text-gray-900 hover:underline">
+            <Link href="/signup" className="font-bold text-gray-900 hover:underline">
               Create an account
-            </a>
+            </Link>
           </p>
         </div>
       </div>
